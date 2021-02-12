@@ -36,35 +36,126 @@ public class User {
 	@JsonIgnoreProperties(value = {"id", "hibernateLazyInitializer"})
 	private City city;
 	
-	@Column(length = 100, nullable=false)
+	@Column(nullable=false)
 	@Setter @Getter
 	private String name;
 	
-	@Column(length = 100, nullable=false, unique = true) // add unique constraint to email column to avoid duplicate entry
+	@Column(nullable=false, unique = true) // add unique constraint to email column to avoid duplicate entry
 	private String email;
 	
-	@Column(length = 50, nullable=false)
+	@Column(nullable=false)
 	private String password;
 	
-	@Column(length = 50, nullable=false)
+	@Column(nullable=false)
 	private String alias;
 	
-	@Column(length = 50, nullable=false)
+	@Column(nullable=false)
 	private String phoneNumber;
 	
-	@Column(length = 50, nullable=false)
+	@Column(nullable=false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
-	@Column(length = 50, nullable=false)
+	@Column(nullable=false)
 	@Enumerated(EnumType.STRING)
 	private Status status;
 	
 	public enum Role {
-		DONOR,VOLUNTEER,ADMIN // Change DONATURE to DONOTR a more correct term
+		DONOR,VOLUNTEER,ADMIN // Change DONATURE to DONOR a more correct term
 	}
 	
 	public enum Status{
 		ACTIVE,NON_ACTIVE
 	}
+	
+	public User() {
+		
+	}
+
+	public User(City city, String name, String email, String password, String alias, String phoneNumber, Role role,
+			Status status) {
+		this.city = city;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.alias = alias;
+		this.phoneNumber = phoneNumber;
+		this.role = role;
+		this.status = status;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
+	
+	
 }
