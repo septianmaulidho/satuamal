@@ -1,5 +1,7 @@
 package com.testing.LastProject.Controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ public class UpdateUser {
 	UserService userService;
 	
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> editUser(@PathVariable("id") String id, @RequestBody UpdateUserPayload updateUserPayload){
+	public ResponseEntity<?> editUser(@PathVariable("id") UUID id, @RequestBody UpdateUserPayload updateUserPayload){
 		UserResponse user = userService.update(id, updateUserPayload);
 		return new ResponseEntity<>(user,HttpStatus.OK);
 	}
