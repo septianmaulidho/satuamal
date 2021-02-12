@@ -8,16 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
 @Table(name="city")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter @Getter
 public class City {
 	
 	@Id
@@ -26,4 +18,25 @@ public class City {
 	
 	@Column(length=50,nullable=false)
 	private String cityName;
+	
+	public City() {
+		
+	}
+	public City(String cityName) {
+		super();
+		this.cityName = cityName.toLowerCase();
+	}
+	public UUID getId() {
+		return id;
+	}
+	public void setId(UUID id) {
+		this.id = id;
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	
 }
