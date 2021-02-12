@@ -40,7 +40,7 @@ public class User {
 	@Setter @Getter
 	private String name;
 	
-	@Column(length = 100, nullable=false)
+	@Column(length = 100, nullable=false, unique = true) // add unique constraint to email column to avoid duplicate entry
 	private String email;
 	
 	@Column(length = 50, nullable=false)
