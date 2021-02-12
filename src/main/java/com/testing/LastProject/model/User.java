@@ -61,7 +61,7 @@ public class User {
 	private Status status;
 	
 	public enum Role {
-		DONATUR,VOLUNTEER,ADMIN
+		DONOR,VOLUNTEER,ADMIN // Change DONATURE to DONOTR a more correct term
 	}
 	
 	public enum Status{
