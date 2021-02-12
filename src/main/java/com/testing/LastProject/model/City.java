@@ -1,7 +1,10 @@
 package com.testing.LastProject.model;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -18,8 +21,8 @@ import lombok.Setter;
 public class City {
 	
 	@Id
-	@Column(length=36)
-	private String id;
+	@GeneratedValue
+	private UUID id; // change generated id to UUID type
 	
 	@Column(length=50,nullable=false)
 	private String cityName;
