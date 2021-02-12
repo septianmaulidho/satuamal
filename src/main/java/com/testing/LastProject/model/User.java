@@ -1,16 +1,19 @@
 package com.testing.LastProject.model;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,12 +28,12 @@ import lombok.Setter;
 @Setter
 public class User {
 	@Id
-	@Column(length=36)
-	private String id;
+	@GeneratedValue // Replace auto generate id from Integer to UUID
+	private UUID id;
 	
 	@JoinColumn(name = "city_id")
 	@ManyToOne(targetEntity = City.class, fetch = FetchType.LAZY)
-	@JsonIgnore
+	@JsonIgnoreProperties(value = {"id", "hibernateLazyInitializer"})
 	private City city;
 	
 	@Column(length = 100, nullable=false)
