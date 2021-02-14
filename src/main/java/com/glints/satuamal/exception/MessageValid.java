@@ -1,10 +1,10 @@
 package com.glints.satuamal.exception;
 
-public class Message {
+public class MessageValid {
 	
 	private String message;
 
-	public Message(String message) {
+	public MessageValid(String message) {
 		this.message = message;
 	}
 

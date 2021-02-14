@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.glints.satuamal.exception.BadRequestIdException;
-import com.glints.satuamal.exception.Message;
+import com.glints.satuamal.exception.BadRequestException;
+import com.glints.satuamal.exception.MessageValid;
 import com.glints.satuamal.model.Recipient;
 import com.glints.satuamal.payload.RecipientPayload;
 import com.glints.satuamal.repository.RecipientRepo;
@@ -42,29 +42,61 @@ public class RecipientController {
 	}
 	
 	@PostMapping("/recipient/create")
-	public ResponseEntity<Recipient> create(@Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestIdException{
+	public ResponseEntity<Recipient> createRecipient(@Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestException{
 		Recipient recipient;
 		try {			
 			recipient = recipientService.create(recipientPayload);
-		} catch (BadRequestIdException e) {
-			System.out.println(e.getMessage());
-			throw new BadRequestIdException(e.getMessage());
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
 		}
 		return new ResponseEntity<Recipient>(recipient, HttpStatus.OK);
 	};
 	
-	@PostMapping("/recipient/upload/{id}")
-	public ResponseEntity<String> uploadImages(@PathVariable("id") Integer id, @RequestParam("images") MultipartFile images) throws IOException{
+	@PostMapping("/recipient/update/{id}")
+	public ResponseEntity<Recipient> updateRecipient(@PathVariable("id") Integer id, @Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestException{
 		
-		recipientService.uploadImages(id, images);
-		Message message = new Message("Image upload successfully!");
+		Recipient recipient;
+		try {			
+			recipient = recipientService.update(id, recipientPayload);
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
+		}
+		
+		return new ResponseEntity<Recipient>(recipient, HttpStatus.OK);
+	}
+	
+	@PostMapping("/recipient/upload/{id}")
+	public ResponseEntity<String> uploadImages(@PathVariable("id") Integer id, @Valid @RequestParam("images") MultipartFile images) throws IOException, BadRequestException{
+		MessageValid message;
+		try {			
+			recipientService.uploadImages(id, images);
+			message = new MessageValid("Image upload successfully!");
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 		return new ResponseEntity(message, HttpStatus.OK);
 	}
 	
+	@GetMapping("/recipient/{id}")
+	public ResponseEntity<Recipient> readRecipient(@PathVariable("id") Integer id) throws BadRequestException{
+		Recipient recipient;
+		try {			
+			recipient = recipientService.readById(id);
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
+		}
+		return new ResponseEntity<Recipient>(recipient, HttpStatus.OK);
+	}
+	
 	@DeleteMapping("/recipient/delete/{id}")
-	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestIdException, IOException{
-		recipientService.delete(id);
-		Message message = new Message("recipient with id: " + id + " deleted successfully!");
+	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestException, IOException{		
+		MessageValid message;
+		try {			
+			recipientService.delete(id);
+			message = new MessageValid("recipient with id: " + id + " deleted successfully!");
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
+		}
 		return new ResponseEntity(message, HttpStatus.OK);
 	}
 	

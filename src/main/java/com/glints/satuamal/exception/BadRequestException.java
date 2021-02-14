@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BadRequestIdException extends Exception {
+public class BadRequestException extends Exception {
     /**
 	 * 
 	 */
@@ -17,10 +17,10 @@ public class BadRequestIdException extends Exception {
 	@JsonIgnore
 	String trace;
     
-    public BadRequestIdException () {
+    public BadRequestException () {
     }
     
-    public BadRequestIdException (String message) {
+    public BadRequestException (String message) {
         super(message);
         this.message = message;
     }

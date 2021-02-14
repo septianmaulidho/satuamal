@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.glints.satuamal.exception.Message;
+import com.glints.satuamal.exception.MessageValid;
 
 @ControllerAdvice
 public class ImagesUploadExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
-  	public ResponseEntity<Message> handleMaxSizeException(MaxUploadSizeExceededException exc) {
-		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new Message("File too large!"));
+  	public ResponseEntity<MessageValid> handleMaxSizeException(MaxUploadSizeExceededException exc) {
+		return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageValid("File too large!"));
   	}
 }

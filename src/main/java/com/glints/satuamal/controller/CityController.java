@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.glints.satuamal.exception.BadRequestIdException;
+import com.glints.satuamal.exception.BadRequestException;
+import com.glints.satuamal.exception.MessageValid;
 import com.glints.satuamal.model.City;
 import com.glints.satuamal.payload.CityPayload;
+import com.glints.satuamal.repository.CityRepo;
 import com.glints.satuamal.service.CityService;
 
 @RestController
@@ -33,41 +35,42 @@ public class CityController {
 		return new ResponseEntity<List<City>>(cities, HttpStatus.OK);
 	}
 	
-	@PostMapping("/create-city")
+	@PostMapping("/city/create")
 	public ResponseEntity<City> create(@Valid @RequestBody CityPayload cityPayload){
 		City city = cityService.create(cityPayload);
 		return new ResponseEntity<City>(city, HttpStatus.OK);
 	}
 	
-	@PostMapping("/update-city/{id}")
-	public ResponseEntity<City> update(@PathVariable("id") Integer id, @Valid @RequestBody CityPayload cityPayload) throws BadRequestIdException {
+	@PostMapping("/city/update/{id}")
+	public ResponseEntity<City> update(@PathVariable("id") Integer id, @Valid @RequestBody CityPayload cityPayload) throws BadRequestException {
 		City city; 
 		try {
 			city = cityService.update(id, cityPayload);			
-		} catch (BadRequestIdException e) {
-			throw new BadRequestIdException(e.getMessage());
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
 		}
 		return new ResponseEntity<City>(city, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete-city/{id}")
-	public ResponseEntity<?> delete(@Valid @PathVariable("id") Integer id) throws BadRequestIdException {
-		String city; 
+	@DeleteMapping("/city/delete/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") Integer id) throws BadRequestException {
+		MessageValid message;
 		try {
-			city = cityService.delete(id);			
-		} catch (BadRequestIdException e) {
-			throw new BadRequestIdException(e.getMessage());
+			message = new MessageValid(cityService.readById(id).getCityName() + " city deleted successfully!");
+			cityService.delete(id);
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
 		}
-		return new ResponseEntity<String>(city, HttpStatus.OK);
+		return new ResponseEntity(message, HttpStatus.OK);
 	}
 	
 	@GetMapping("/city/{id}")
-	public ResponseEntity<?> readById(@Valid @PathVariable("id") Integer id) throws BadRequestIdException {
+	public ResponseEntity<?> readById(@Valid @PathVariable("id") Integer id) throws BadRequestException {
 		City city; 
 		try {
 			city = cityService.readById(id);			
-		} catch (BadRequestIdException e) {
-			throw new BadRequestIdException(e.getMessage());
+		} catch (BadRequestException e) {
+			throw new BadRequestException(e.getMessage());
 		}
 		return new ResponseEntity<City>(city, HttpStatus.OK);
 	}

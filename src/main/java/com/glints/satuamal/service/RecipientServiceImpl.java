@@ -2,6 +2,7 @@ package com.glints.satuamal.service;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.glints.satuamal.exception.BadRequestIdException;
+import com.glints.satuamal.exception.BadRequestException;
 import com.glints.satuamal.model.City;
 import com.glints.satuamal.model.Recipient;
 import com.glints.satuamal.payload.RecipientPayload;
@@ -37,8 +38,8 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 
 	@Override
-	public Recipient create(RecipientPayload recipientPayload) throws BadRequestIdException {
-		City city = cityRepo.findById(recipientPayload.getCityId()).orElseThrow(() -> new BadRequestIdException("City with id: " + recipientPayload.getCityId() + " not found!"));
+	public Recipient create(RecipientPayload recipientPayload) throws BadRequestException {
+		City city = cityRepo.findById(recipientPayload.getCityId()).orElseThrow(() -> new BadRequestException("City with id: " + recipientPayload.getCityId() + " not found!"));
 		Recipient recipient = new Recipient(
 							recipientPayload.getName(),
 							recipientPayload.getBirthdate(),
@@ -52,49 +53,38 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 
 	@Override
-	public Recipient update(Integer id, RecipientPayload recipientPayload) throws BadRequestIdException {
-		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestIdException("Recipient with id: " + id + " not found!"));
-		City city = cityRepo.findById(recipientPayload.getCityId()).orElseThrow(() -> new BadRequestIdException("Recipient with id: " + recipientPayload.getCityId() + " not found!"));
+	public Recipient update(Integer id, RecipientPayload recipientPayload) throws BadRequestException {
+		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
+		City city = cityRepo.findById(recipientPayload.getCityId()).orElseThrow(() -> new BadRequestException("Recipient with id: " + recipientPayload.getCityId() + " not found!"));
 		recipient.setName(recipientPayload.getName());
 		recipient.setBirthdate(recipientPayload.getBirthdate());
 		recipient.setAddress(recipientPayload.getAddress());
 		recipient.setDescription(recipientPayload.getDescription());
 		recipient.setCity(city);
+		recipient.setUpdatedTime(new Date());
 		
 		recipient = recipientRepo.save(recipient);
 		return recipient;
 	}
 
 	@Override
-	public void delete(Integer id) throws BadRequestIdException, IOException {
-		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestIdException("Recipient with id: " + id + " not found!"));
-		cloudinaryService.delete(recipient.getImagesId());
-		recipientRepo.deleteById(id);
+	public Recipient readById(Integer id) throws BadRequestException {
+		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
+		return recipient;
 	}
-
+	
 	@Override
-	public Recipient readById(Integer id) throws BadRequestIdException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean exists(Integer id) {
-		return recipientRepo.existsById(id);
-	}
-
-	@Override
-	public void uploadImages(Integer id, MultipartFile multipartFile) throws IOException {
+	public void uploadImages(Integer id, MultipartFile multipartFile) throws IOException, BadRequestException {
 		
 		Map result; 
 		
-		Recipient recipient = recipientRepo.findById(id).orElse(null);
+		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
 		
 		BufferedImage bi = ImageIO.read(multipartFile.getInputStream());
 		if (!exists(recipient.getId())) {
-			System.out.println("Recipient with id: " + id + " not found!");
+			throw new BadRequestException("Recipient with id: " + id + " not found!");
 		}else if(bi == null){	
-			System.out.println("image not valid");
+			throw new BadRequestException("Image is required!");
 		} else {
 			
 			if(recipient.getImagesId() != null || recipient.getImagesUrl() != null) {
@@ -109,6 +99,20 @@ public class RecipientServiceImpl implements RecipientService {
 			recipientRepo.save(recipient);
 		}
 		
+	}
+	
+	@Override
+	public void delete(Integer id) throws BadRequestException, IOException {
+		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
+		if(recipient.getImagesId() != null || recipient.getImagesUrl() != null) {			
+			cloudinaryService.delete(recipient.getImagesId());
+		}
+		recipientRepo.deleteById(id);
+	}
+
+	@Override
+	public boolean exists(Integer id) {
+		return recipientRepo.existsById(id);
 	}
 
 }

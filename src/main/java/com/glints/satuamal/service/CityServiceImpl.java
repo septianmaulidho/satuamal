@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.glints.satuamal.exception.BadRequestIdException;
+import com.glints.satuamal.exception.BadRequestException;
 import com.glints.satuamal.model.City;
 import com.glints.satuamal.payload.CityPayload;
 import com.glints.satuamal.repository.CityRepo;
@@ -31,8 +31,8 @@ public class CityServiceImpl implements CityService {
 	}
 
 	@Override
-	public City update(Integer id, CityPayload cityPayload) throws BadRequestIdException {
-		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestIdException("City with id: " + id + " not found!"));
+	public City update(Integer id, CityPayload cityPayload) throws BadRequestException {
+		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestException("City with id: " + id + " not found!"));
 		city.setCityName(cityPayload.getCityName());
 		city.setUpdatedTime(new Date());
 		city = cityRepo.save(city);
@@ -40,15 +40,13 @@ public class CityServiceImpl implements CityService {
 	}
 
 	@Override
-	public String delete(Integer id) throws BadRequestIdException {
-		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestIdException("City with id: " + id + " not found!"));
-		cityRepo.deleteById(city.getId());
-		return city.getCityName() + " City has been deleted!";
+	public void delete(Integer id) throws BadRequestException {
+		cityRepo.deleteById(id);
 	}
 
 	@Override
-	public City readById(Integer id) throws BadRequestIdException {
-		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestIdException("City with id: " + id + " not found!"));
+	public City readById(Integer id) throws BadRequestException {
+		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestException("City with id: " + id + " not found!"));
 		return city;
 	}
 	
