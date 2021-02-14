@@ -1,5 +1,6 @@
 package com.glints.satuamal.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.glints.satuamal.exception.BadRequestIdException;
@@ -10,6 +11,7 @@ public interface RecipientService {
 	public List<Recipient> read();
 	public Recipient create(RecipientPayload recipientPayload) throws BadRequestIdException;
 	public Recipient update(Integer id, RecipientPayload recipientPayload) throws BadRequestIdException;
-	public String delete(Integer id) throws BadRequestIdException;
+	public void delete(Integer id) throws BadRequestIdException, IOException;
 	public Recipient readById(Integer id) throws BadRequestIdException;
+	public boolean exists(Integer id);
 }

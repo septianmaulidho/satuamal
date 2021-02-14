@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,26 +19,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "repicient")
-public class Recipient extends Persistance {
+public class Recipient extends Persistance{
 	
-	public Recipient() {
-		super();
-	}
-
-	public Recipient(String name, Date birthdate, String address, String photoUrl, String description,
-			RecipientStatus recipientStatus, City city) {
-		super();
-		this.name = name;
-		this.birthdate = birthdate;
-		this.address = address;
-		this.photoUrl = photoUrl;
-		this.description = description;
-		this.recipientStatus = recipientStatus;
-		this.city = city;
-		this.setCreatedTime(new Date());
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
@@ -59,24 +40,43 @@ public class Recipient extends Persistance {
 	private String address;
 	
 	@Column(length = 255)
-	private String photoUrl;
-	
-	@Column(length = 255)
 	private String description;
 	
 	@Column(length = 50)
 	@Enumerated(EnumType.STRING)
 	private RecipientStatus recipientStatus;
 	
-//	@JoinColumn(name = "user_id")
-//	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-//	@JsonIgnore
-//	private User user;
-	
 	@JoinColumn(name = "city_id")
 	@ManyToOne(targetEntity = City.class, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private City city;
+	
+	@JoinColumn(name = "recipient_images_id")
+	@ManyToOne(targetEntity = RecipientImages.class, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private RecipientImages recipientImages;
+
+	public Recipient() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Recipient(String name, Date birthdate, String address, String description, RecipientStatus recipientStatus,
+			City city) {
+		super();
+		this.name = name;
+		this.birthdate = birthdate;
+		this.address = address;
+		this.description = description;
+		this.recipientStatus = recipientStatus;
+		this.city = city;
+		this.setCreatedTime(new Date());
+	}
+	
+	public Recipient(RecipientImages recipientImages) {
+		super();
+		this.recipientImages = recipientImages;
+	}
 
 	public Integer getId() {
 		return id;
@@ -110,14 +110,6 @@ public class Recipient extends Persistance {
 		this.address = address;
 	}
 
-	public String getPhotoUrl() {
-		return photoUrl;
-	}
-
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -140,6 +132,14 @@ public class Recipient extends Persistance {
 
 	public void setCity(City city) {
 		this.city = city;
+	}
+
+	public RecipientImages getRecipientImages() {
+		return recipientImages;
+	}
+
+	public void setRecipientImages(RecipientImages recipientImages) {
+		this.recipientImages = recipientImages;
 	}
 	
 }
