@@ -92,8 +92,8 @@ public class RecipientController {
 	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestException, IOException{		
 		MessageValid message;
 		try {			
+			message = new MessageValid("recipient with name: " + recipientService.readById(id).getName() + " deleted successfully!");
 			recipientService.delete(id);
-			message = new MessageValid("recipient with id: " + id + " deleted successfully!");
 		} catch (BadRequestException e) {
 			throw new BadRequestException(e.getMessage());
 		}
