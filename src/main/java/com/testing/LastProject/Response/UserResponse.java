@@ -20,6 +20,7 @@ public class UserResponse {
 	private City city;
 	private User user;
 	private String message;
+	private String token;
 	
 	public UserResponse(String message) {
 		this.message = message;

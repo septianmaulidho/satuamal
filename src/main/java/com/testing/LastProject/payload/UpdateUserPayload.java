@@ -1,12 +1,20 @@
 package com.testing.LastProject.payload;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter @Getter
 public class UpdateUserPayload {
 	private String alias;
 	private String name;
 	private String phoneNumber;
-	private String cityId;
+	private String cityName;
+	public String getAlias() {
+		return alias;
+	}
+	public String getName() {
+		return name;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public String getCityName() {
+		return cityName;
+	}
 }

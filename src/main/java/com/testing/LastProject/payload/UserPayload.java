@@ -1,5 +1,6 @@
 package com.testing.LastProject.payload;
 
+import com.testing.LastProject.model.User;
 import com.testing.LastProject.model.User.Role;
 import com.testing.LastProject.model.User.Status;
 
@@ -13,8 +14,9 @@ public class UserPayload {
 	private String password;
 	private String alias;
 	private String phoneNumber;
-	private Role role;
-	private Status status;
+	private User.Role role;
+	private User.Status status;
+	
 	public String getCity() {
 		return city;
 	}
@@ -33,10 +35,10 @@ public class UserPayload {
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	public Role getRole() {
+	public User.Role getRole() {
 		return role;
 	}
-	public Status getStatus() {
+	public User.Status getStatus() {
 		return status;
 	}
 }

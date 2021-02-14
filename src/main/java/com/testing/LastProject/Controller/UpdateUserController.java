@@ -17,7 +17,7 @@ import com.testing.LastProject.payload.UpdateUserPayload;
 
 @RestController
 @RequestMapping("user/update")
-public class UpdateUser {
+public class UpdateUserController {
 	@Autowired
 	UserService userService;
 	

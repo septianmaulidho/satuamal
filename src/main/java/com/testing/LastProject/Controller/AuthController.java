@@ -1,27 +1,31 @@
 package com.testing.LastProject.Controller;
 
-import java.security.Key;
-import java.security.Security;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.testing.LastProject.ErrorHandler.AuthException;
 import com.testing.LastProject.JWTconfig.JwtConstant;
+import com.testing.LastProject.Middleware.Middleware;
 import com.testing.LastProject.Response.UserResponse;
 import com.testing.LastProject.Service.UserService;
 import com.testing.LastProject.payload.UserPayload;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @RestController
@@ -30,9 +34,9 @@ public class AuthController {
 	
 	public Map<String, String> generateJWTToken(UserResponse userResponse){
 		long timestamp = System.currentTimeMillis();
-		Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+		SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode("[B2492849238jmfsmdafidjffjadnfjdfhjdkj6df00d0a"));
 		@SuppressWarnings("deprecation")
-		String token = Jwts.builder().signWith(SignatureAlgorithm.HS256, key)
+		String token = Jwts.builder().signWith(key)
 				.setIssuedAt(new Date(timestamp))
 				.setExpiration(new Date(timestamp + JwtConstant.TOKEN_VALIDITY))
 				.claim("userId", userResponse.getId())
@@ -42,6 +46,7 @@ public class AuthController {
 				.claim("role", userResponse.getRole())
 				.claim("status", userResponse.getStatus())
 				.compact();
+
 		Map<String, String> map = new HashMap<>();
 		map.put("token", token);
 		return map;
@@ -64,6 +69,7 @@ public class AuthController {
 //			map.put("message", "login succesfull");
 			return new ResponseEntity<>(generateJWTToken(user), HttpStatus.OK);
 		}catch (Exception e) {
+			System.out.println(e);
 			Map<String, String> map = new HashMap<>();
 			map.put("message", "user unauthorized");
 			return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);

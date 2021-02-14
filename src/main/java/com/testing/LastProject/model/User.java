@@ -15,17 +15,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Entity
 @Table(name="users")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 public class User {
 	@Id
 	@GeneratedValue // Replace auto generate id from Integer to UUID
@@ -37,7 +28,6 @@ public class User {
 	private City city;
 	
 	@Column(nullable=false)
-	@Setter @Getter
 	private String name;
 	
 	@Column(nullable=false, unique = true) // add unique constraint to email column to avoid duplicate entry

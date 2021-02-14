@@ -1,8 +1,5 @@
 package com.testing.LastProject.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.testing.LastProject.ErrorHandler.AuthException;
 import com.testing.LastProject.ErrorHandler.ResourceNotFoundException;
-import com.testing.LastProject.JWTconfig.JwtConstant;
 import com.testing.LastProject.Repository.CityRepository;
 import com.testing.LastProject.Repository.UserRepository;
 import com.testing.LastProject.Response.UserResponse;
@@ -76,15 +72,21 @@ public class UserServiceImplement implements UserService {
 	}
 
 	@Override
-	public UserResponse update(UUID id, UpdateUserPayload updateuserPayload) {
-
-		User user = userRepo.findById(id);
-		user.setAlias(updateuserPayload.getAlias());
-		user.setName(updateuserPayload.getName());
-		user.setPhoneNumber(updateuserPayload.getPhoneNumber());
-		City city = cityRepo.findById(updateuserPayload.getCityId())
+	public UserResponse update(UUID id, UpdateUserPayload updateUserPayload) {
+		
+		User user = userRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User is not found"));
-		user.setCity(city);
+		user.setAlias(updateUserPayload.getAlias());
+		user.setName(updateUserPayload.getName());
+		user.setPhoneNumber(updateUserPayload.getPhoneNumber());
+		City city = cityRepo.findBycityName(updateUserPayload.getCityName().toLowerCase());
+		if(city!=null) {
+			user.setCity(city);
+		} else {
+			City newCity = new City(updateUserPayload.getCityName().toLowerCase());
+			newCity = cityRepo.save(newCity);
+			user.setCity(newCity);
+		}
 		user = userRepo.save(user);
 		UserResponse userResponse = new UserResponse(user.getId(), user.getCity(), user.getAlias(), user.getEmail(),
 				user.getName(), user.getPhoneNumber(), user.getRole(), user.getStatus());
