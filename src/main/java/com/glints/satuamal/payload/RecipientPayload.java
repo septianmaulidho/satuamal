@@ -36,7 +36,9 @@ public class RecipientPayload {
 	@Min(1)
 	private Integer cityId;
 	
-	private Integer recipientImageId;
+	private String imageId;
+	
+	private String imageUrl;
 
 	public String getName() {
 		return name;
@@ -62,8 +64,11 @@ public class RecipientPayload {
 		return cityId;
 	}
 
-	public Integer getRecipientImageId() {
-		return recipientImageId;
+	public String getImageId() {
+		return imageId;
 	}
-	
+
+	public String getImageUrl() {
+		return imageUrl;
+	}	
 }

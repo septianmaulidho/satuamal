@@ -14,22 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.glints.satuamal.exception.BadRequestIdException;
 import com.glints.satuamal.exception.Message;
 import com.glints.satuamal.model.Recipient;
 import com.glints.satuamal.payload.RecipientPayload;
 import com.glints.satuamal.repository.RecipientRepo;
-import com.glints.satuamal.service.RecipientImagesService;
 import com.glints.satuamal.service.RecipientService;
 
 @RestController
 @RequestMapping("/api")
 public class RecipientController {
-	
-	@Autowired
-	RecipientImagesService recipientimagesService;
 	
 	@Autowired
 	RecipientService recipientService;	
@@ -38,12 +36,12 @@ public class RecipientController {
 	RecipientRepo recipientRepo;
 	
 	@GetMapping("/recipients")
-	public ResponseEntity<List<Recipient>> create(){
+	public ResponseEntity<List<Recipient>> read(){
 		List<Recipient> recipients = recipientService.read();
 		return new ResponseEntity<List<Recipient>>(recipients, HttpStatus.OK);
 	}
 	
-	@PostMapping("/create-recipient")
+	@PostMapping("/recipient/create")
 	public ResponseEntity<Recipient> create(@Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestIdException{
 		Recipient recipient;
 		try {			
@@ -55,13 +53,19 @@ public class RecipientController {
 		return new ResponseEntity<Recipient>(recipient, HttpStatus.OK);
 	};
 	
-	@DeleteMapping("/delete-recipient/{id}")
-	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestIdException, IOException{
-		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestIdException("Recipient with id: " + id + " not found!"));
-		recipientService.delete(id);
-		recipientimagesService.delete(recipient.getRecipientImages().getId());
+	@PostMapping("/recipient/upload/{id}")
+	public ResponseEntity<String> uploadImages(@PathVariable("id") Integer id, @RequestParam("images") MultipartFile images) throws IOException{
 		
-		return new ResponseEntity(new Message("recipient with id: " + id + " deleted successfully!"), HttpStatus.OK);
+		recipientService.uploadImages(id, images);
+		Message message = new Message("Image upload successfully!");
+		return new ResponseEntity(message, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/recipient/delete/{id}")
+	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestIdException, IOException{
+		recipientService.delete(id);
+		Message message = new Message("recipient with id: " + id + " deleted successfully!");
+		return new ResponseEntity(message, HttpStatus.OK);
 	}
 	
 }

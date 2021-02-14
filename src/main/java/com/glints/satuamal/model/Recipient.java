@@ -51,14 +51,11 @@ public class Recipient extends Persistance{
 	@JsonIgnore
 	private City city;
 	
-	@JoinColumn(name = "recipient_images_id")
-	@ManyToOne(targetEntity = RecipientImages.class, fetch = FetchType.LAZY)
-	@JsonIgnore
-	private RecipientImages recipientImages;
+	private String imagesId;
+	private String imagesUrl;
 
 	public Recipient() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Recipient(String name, Date birthdate, String address, String description, RecipientStatus recipientStatus,
@@ -73,9 +70,10 @@ public class Recipient extends Persistance{
 		this.setCreatedTime(new Date());
 	}
 	
-	public Recipient(RecipientImages recipientImages) {
+	public Recipient(String imagesId, String ImagesUrl) {
 		super();
-		this.recipientImages = recipientImages;
+		this.imagesId = imagesId;
+		this.imagesUrl = ImagesUrl;
 	}
 
 	public Integer getId() {
@@ -134,12 +132,20 @@ public class Recipient extends Persistance{
 		this.city = city;
 	}
 
-	public RecipientImages getRecipientImages() {
-		return recipientImages;
+	public String getImagesId() {
+		return imagesId;
 	}
 
-	public void setRecipientImages(RecipientImages recipientImages) {
-		this.recipientImages = recipientImages;
+	public void setImagesId(String imagesId) {
+		this.imagesId = imagesId;
+	}
+
+	public String getImagesUrl() {
+		return imagesUrl;
+	}
+
+	public void setImagesUrl(String imagesUrl) {
+		this.imagesUrl = imagesUrl;
 	}
 	
 }
