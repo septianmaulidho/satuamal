@@ -67,11 +67,12 @@ public class RecipientImagesController {
 			return new ResponseEntity(new Message("Recipient with id: " + id + " not found!"), HttpStatus.BAD_REQUEST);
 		}else if(bi == null){	
 			return new ResponseEntity(new Message("image not valid"), HttpStatus.BAD_REQUEST);
-		}else {
+		} else {
 			
-//			recipientImagesOld = recipientimagesRepo.getOne(recipient.getRecipientImages().getId());
+			
+//			RecipientImages recipientImagesOld = recipientimagesRepo.findById(recipient.getRecipientImages().getId()).orElse(null);	
 //			recipientimagesService.delete(recipientImagesOld.getId());
-//			cloudinaryService.delete(recipientImagesOld.getImageId());
+			
 			result = cloudinaryService.upload(image);
 			RecipientImages recipientImages = new RecipientImages(
 					(String) result.get("original_filename"),
@@ -81,9 +82,9 @@ public class RecipientImagesController {
 			recipientimagesService.save(recipientImages);
 			
 			RecipientImages recipientImagesNew = recipientimagesRepo.findById(recipientImages.getId()).orElse(null);
-			
-			
+
 			recipient.setRecipientImages(recipientImagesNew);
+			
 			
 			recipientRepo.save(recipient);
 		}

@@ -29,13 +29,13 @@ import com.glints.satuamal.service.RecipientService;
 public class RecipientController {
 	
 	@Autowired
-	RecipientService recipientService;
+	RecipientImagesService recipientimagesService;
+	
+	@Autowired
+	RecipientService recipientService;	
 	
 	@Autowired
 	RecipientRepo recipientRepo;
-	
-	@Autowired
-	RecipientImagesService recipientimagesService;
 	
 	@GetMapping("/recipients")
 	public ResponseEntity<List<Recipient>> create(){
@@ -58,8 +58,9 @@ public class RecipientController {
 	@DeleteMapping("/delete-recipient/{id}")
 	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestIdException, IOException{
 		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestIdException("Recipient with id: " + id + " not found!"));
-		recipientimagesService.delete(recipient.getRecipientImages().getId());
 		recipientService.delete(id);
+		recipientimagesService.delete(recipient.getRecipientImages().getId());
+		
 		return new ResponseEntity(new Message("recipient with id: " + id + " deleted successfully!"), HttpStatus.OK);
 	}
 	

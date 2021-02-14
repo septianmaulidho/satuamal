@@ -38,8 +38,9 @@ public class RecipientImagesService {
 	
 	public void delete(Integer id) throws IOException {
 		RecipientImages recipientImages = recipientimagesRepo.getOne(id);
+		Message message;
 		if (!exists(recipientImages.getId())) {
-			Message message = new Message("images with id: " + id + " doesn't exist!");
+			message = new Message("images with id: " + id + " doesn't exist!");
 		}
 		cloudinaryService.delete(recipientImages.getImageId());
 		recipientimagesRepo.deleteById(recipientImages.getId());
