@@ -63,22 +63,27 @@ public class RecipientImagesController {
 		Recipient recipient = recipientRepo.findById(id).orElse(null);
 		
 		BufferedImage bi = ImageIO.read(image.getInputStream());
-		
 		if (!recipientService.exists(recipient.getId())) {
 			return new ResponseEntity(new Message("Recipient with id: " + id + " not found!"), HttpStatus.BAD_REQUEST);
-		} else if(bi == null){	
+		}else if(bi == null){	
 			return new ResponseEntity(new Message("image not valid"), HttpStatus.BAD_REQUEST);
-		} else {
+		}else {
+			
+//			recipientImagesOld = recipientimagesRepo.getOne(recipient.getRecipientImages().getId());
+//			recipientimagesService.delete(recipientImagesOld.getId());
+//			cloudinaryService.delete(recipientImagesOld.getImageId());
 			result = cloudinaryService.upload(image);
 			RecipientImages recipientImages = new RecipientImages(
 					(String) result.get("original_filename"),
 					(String) result.get("url"),
 					(String) result.get("public_id")
-					);
+					);			
 			recipientimagesService.save(recipientImages);
 			
-			RecipientImages recipientImagesCreated = recipientimagesRepo.findById(recipientImages.getId()).orElse(null);
-			recipient.setRecipientImages(recipientImagesCreated);
+			RecipientImages recipientImagesNew = recipientimagesRepo.findById(recipientImages.getId()).orElse(null);
+			
+			
+			recipient.setRecipientImages(recipientImagesNew);
 			
 			recipientRepo.save(recipient);
 		}

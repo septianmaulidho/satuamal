@@ -43,6 +43,5 @@ public class RecipientImagesService {
 		}
 		cloudinaryService.delete(recipientImages.getImageId());
 		recipientimagesRepo.deleteById(recipientImages.getId());
-		System.out.println();
 	}
 }
