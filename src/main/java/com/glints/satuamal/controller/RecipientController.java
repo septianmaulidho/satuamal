@@ -53,7 +53,7 @@ public class RecipientController {
 	};
 	
 	@PostMapping("/recipient/update/{id}")
-	public ResponseEntity<Recipient> updateRecipient(@PathVariable("id") Integer id, @Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestException{
+	public ResponseEntity<Recipient> updateRecipient(@PathVariable("id") String id, @Valid @RequestBody RecipientPayload recipientPayload) throws BadRequestException{
 		
 		Recipient recipient;
 		try {			
@@ -66,7 +66,7 @@ public class RecipientController {
 	}
 	
 	@PostMapping("/recipient/upload/{id}")
-	public ResponseEntity<String> uploadImages(@PathVariable("id") Integer id, @Valid @RequestParam("images") MultipartFile images) throws IOException, BadRequestException{
+	public ResponseEntity<String> uploadImages(@PathVariable("id") String id, @Valid @RequestParam("images") MultipartFile images) throws IOException, BadRequestException{
 		MessageValid message;
 		try {			
 			recipientService.uploadImages(id, images);
@@ -78,7 +78,7 @@ public class RecipientController {
 	}
 	
 	@GetMapping("/recipient/{id}")
-	public ResponseEntity<Recipient> readRecipient(@PathVariable("id") Integer id) throws BadRequestException{
+	public ResponseEntity<Recipient> readRecipient(@PathVariable("id") String id) throws BadRequestException{
 		Recipient recipient;
 		try {			
 			recipient = recipientService.readById(id);
@@ -89,7 +89,7 @@ public class RecipientController {
 	}
 	
 	@DeleteMapping("/recipient/delete/{id}")
-	public ResponseEntity<?> delete (@PathVariable("id") Integer id) throws BadRequestException, IOException{		
+	public ResponseEntity<?> delete (@PathVariable("id") String id) throws BadRequestException, IOException{		
 		MessageValid message;
 		try {			
 			message = new MessageValid("recipient with name: " + recipientService.readById(id).getName() + " deleted successfully!");

@@ -33,8 +33,8 @@ public class RecipientPayload {
 	@NotNull(message = "Recipient birthdate is required!")
 	private Recipient.RecipientStatus recipientStatus;
 	
-	@Min(1)
-	private Integer cityId;
+	@NotBlank(message = "city is required!")
+	private String cityId;
 	
 	private String imageId;
 	
@@ -60,7 +60,7 @@ public class RecipientPayload {
 		return recipientStatus;
 	}
 
-	public Integer getCityId() {
+	public String getCityId() {
 		return cityId;
 	}
 

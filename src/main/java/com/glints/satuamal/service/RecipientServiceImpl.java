@@ -53,7 +53,7 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 
 	@Override
-	public Recipient update(Integer id, RecipientPayload recipientPayload) throws BadRequestException {
+	public Recipient update(String id, RecipientPayload recipientPayload) throws BadRequestException {
 		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
 		City city = cityRepo.findById(recipientPayload.getCityId()).orElseThrow(() -> new BadRequestException("Recipient with id: " + recipientPayload.getCityId() + " not found!"));
 		recipient.setName(recipientPayload.getName());
@@ -68,13 +68,13 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 
 	@Override
-	public Recipient readById(Integer id) throws BadRequestException {
+	public Recipient readById(String id) throws BadRequestException {
 		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
 		return recipient;
 	}
 	
 	@Override
-	public void uploadImages(Integer id, MultipartFile multipartFile) throws IOException, BadRequestException {
+	public void uploadImages(String id, MultipartFile multipartFile) throws IOException, BadRequestException {
 		
 		Map result; 
 		
@@ -93,6 +93,7 @@ public class RecipientServiceImpl implements RecipientService {
 			result = cloudinaryService.upload(multipartFile);
 			recipient.setImagesId((String) result.get("public_id"));
 			recipient.setImagesUrl((String) result.get("url"));
+			recipient.setUpdatedTime(new Date());
 			recipientRepo.save(recipient);		
 			
 			
@@ -102,7 +103,7 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 	
 	@Override
-	public void delete(Integer id) throws BadRequestException, IOException {
+	public void delete(String id) throws BadRequestException, IOException {
 		Recipient recipient = recipientRepo.findById(id).orElseThrow(() -> new BadRequestException("Recipient with id: " + id + " not found!"));
 		if(recipient.getImagesId() != null || recipient.getImagesUrl() != null) {			
 			cloudinaryService.delete(recipient.getImagesId());
@@ -111,7 +112,7 @@ public class RecipientServiceImpl implements RecipientService {
 	}
 
 	@Override
-	public boolean exists(Integer id) {
+	public boolean exists(String id) {
 		return recipientRepo.existsById(id);
 	}
 

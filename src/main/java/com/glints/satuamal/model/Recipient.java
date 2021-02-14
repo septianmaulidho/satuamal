@@ -8,10 +8,11 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,9 +23,10 @@ import lombok.Data;
 public class Recipient extends Persistance{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	private Integer id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name ="uuid", strategy = "uuid2")
+	@Column(name="id", unique = true)
+	private String id;
 	
 	public enum RecipientStatus {
 		ACTIVE, NONACTIVE, PROGRESS, REJECT
@@ -76,11 +78,11 @@ public class Recipient extends Persistance{
 		this.imagesUrl = ImagesUrl;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

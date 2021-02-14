@@ -12,9 +12,9 @@ import com.glints.satuamal.payload.RecipientPayload;
 public interface RecipientService {
 	public List<Recipient> read();
 	public Recipient create(RecipientPayload recipientPayload) throws BadRequestException;
-	public Recipient update(Integer id, RecipientPayload recipientPayload) throws BadRequestException;
-	public Recipient readById(Integer id) throws BadRequestException;
-	public void uploadImages(Integer id, MultipartFile multipartFile) throws IOException, BadRequestException;
-	public void delete(Integer id) throws BadRequestException, IOException;
-	public boolean exists(Integer id);
+	public Recipient update(String id, RecipientPayload recipientPayload) throws BadRequestException;
+	public Recipient readById(String id) throws BadRequestException;
+	public void uploadImages(String id, MultipartFile multipartFile) throws IOException, BadRequestException;
+	public void delete(String id) throws BadRequestException, IOException;
+	public boolean exists(String id);
 }

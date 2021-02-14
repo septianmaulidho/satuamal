@@ -42,7 +42,7 @@ public class CityController {
 	}
 	
 	@PostMapping("/city/update/{id}")
-	public ResponseEntity<City> update(@PathVariable("id") Integer id, @Valid @RequestBody CityPayload cityPayload) throws BadRequestException {
+	public ResponseEntity<City> update(@PathVariable("id") String id, @Valid @RequestBody CityPayload cityPayload) throws BadRequestException {
 		City city; 
 		try {
 			city = cityService.update(id, cityPayload);			
@@ -53,7 +53,7 @@ public class CityController {
 	}
 	
 	@DeleteMapping("/city/delete/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") Integer id) throws BadRequestException {
+	public ResponseEntity<?> delete(@PathVariable("id") String id) throws BadRequestException {
 		MessageValid message;
 		try {
 			message = new MessageValid(cityService.readById(id).getCityName() + " city deleted successfully!");
@@ -65,7 +65,7 @@ public class CityController {
 	}
 	
 	@GetMapping("/city/{id}")
-	public ResponseEntity<?> readById(@Valid @PathVariable("id") Integer id) throws BadRequestException {
+	public ResponseEntity<?> readById(@Valid @PathVariable("id") String id) throws BadRequestException {
 		City city; 
 		try {
 			city = cityService.readById(id);			

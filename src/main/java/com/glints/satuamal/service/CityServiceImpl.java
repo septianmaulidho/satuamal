@@ -31,7 +31,7 @@ public class CityServiceImpl implements CityService {
 	}
 
 	@Override
-	public City update(Integer id, CityPayload cityPayload) throws BadRequestException {
+	public City update(String id, CityPayload cityPayload) throws BadRequestException {
 		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestException("City with id: " + id + " not found!"));
 		city.setCityName(cityPayload.getCityName());
 		city.setUpdatedTime(new Date());
@@ -40,12 +40,12 @@ public class CityServiceImpl implements CityService {
 	}
 
 	@Override
-	public void delete(Integer id) throws BadRequestException {
+	public void delete(String id) throws BadRequestException {
 		cityRepo.deleteById(id);
 	}
 
 	@Override
-	public City readById(Integer id) throws BadRequestException {
+	public City readById(String id) throws BadRequestException {
 		City city = cityRepo.findById(id).orElseThrow(() -> new BadRequestException("City with id: " + id + " not found!"));
 		return city;
 	}
