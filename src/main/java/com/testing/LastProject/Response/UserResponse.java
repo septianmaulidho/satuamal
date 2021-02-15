@@ -18,13 +18,7 @@ public class UserResponse {
 	private Role role;
 	private Status status;
 	private City city;
-	private User user;
-	private String message;
 	private String token;
-	
-	public UserResponse(String message) {
-		this.message = message;
-	}
 	
 	public UserResponse(UUID id, City city, String name, String alias,  String email, String phoneNumber, Role role,
 			Status status) {
@@ -72,14 +66,12 @@ public class UserResponse {
 	public City getCity() {
 		return city;
 	}
-	public User getUser() {
-		return user;
+	
+	public String getToken() {
+		return token;
 	}
-	public String getMessage() {
-		return message;
+	
+	public void setToken(String token) {
+		this.token = token;
 	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-
 }

@@ -88,8 +88,9 @@ public class UserServiceImplement implements UserService {
 			user.setCity(newCity);
 		}
 		user = userRepo.save(user);
-		UserResponse userResponse = new UserResponse(user.getId(), user.getCity(), user.getAlias(), user.getEmail(),
-				user.getName(), user.getPhoneNumber(), user.getRole(), user.getStatus());
+		UserResponse userResponse = new UserResponse(user.getId(), user.getCity(), user.getName(),
+							user.getAlias(), user.getEmail(),
+							user.getPhoneNumber(), user.getRole(), user.getStatus());
 		return userResponse;
 	}
 }
