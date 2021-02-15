@@ -1,7 +1,0 @@
-
-Upload
-1. Send parameter recipientId and multipartFile;
-2. Find recipient by recipientId;
-3. Send multipartFile to cloudinary and get return URL;
-4. Update Recipient PhotoUrl with url from cloudinary;
-5. 
