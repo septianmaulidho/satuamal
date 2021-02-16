@@ -49,17 +49,25 @@ public class Donation {
 	@JsonIgnore
 	private User user;
 	
+	@JoinColumn(name = "recipient_id")
+	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Recipient recipient;
+	
 	public Donation() {
 		super();
 	}
 	
-	public Donation(Date accepted_Date, Date given_Date, String photo, User user) {
+
+	public Donation(Date accepted_Date, Date given_Date, String photo, User user, Recipient recipient) {
 		super();
 		this.accepted_Date = accepted_Date;
 		this.given_Date = given_Date;
 		this.photo = photo;
 		this.user = user;
+		this.recipient = recipient;
 	}
+
 
 	public String getId() {
 		return id;
@@ -85,5 +93,23 @@ public class Donation {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+
+
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+	public Recipient getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
+	}
+	
 	
 }

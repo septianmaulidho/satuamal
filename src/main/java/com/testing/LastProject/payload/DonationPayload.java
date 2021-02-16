@@ -24,6 +24,8 @@ public class DonationPayload {
 	private String photo;
 	
 	private UUID user;
+	
+	private String recipient;
 
 
 	public Date getAccepted_Date() {
@@ -41,5 +43,11 @@ public class DonationPayload {
 	public UUID getUser() {
 		return user;
 	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+	
+	
 }
 

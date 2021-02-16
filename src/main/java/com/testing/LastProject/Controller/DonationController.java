@@ -19,9 +19,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.testing.LastProject.ErrorHandler.ResourceNotFoundException;
 import com.testing.LastProject.Repository.DonationRepo;
+import com.testing.LastProject.Repository.RecipientRepository;
 import com.testing.LastProject.Repository.UserRepository;
 import com.testing.LastProject.Service.FileStorageService;
 import com.testing.LastProject.model.Donation;
+import com.testing.LastProject.model.Recipient;
 import com.testing.LastProject.model.User;
 import com.testing.LastProject.payload.DonationPayload;
 
@@ -37,6 +39,8 @@ public class DonationController {
 	private DonationRepo donationRepo;
 	@Autowired
 	private UserRepository userRepo;
+	@Autowired
+	private RecipientRepository recipientRepo;
 	
 	private FileStorageService fileStorageService;
 	
@@ -60,9 +64,10 @@ public class DonationController {
 		
 		/** get user Id data*/
 		User userId = userRepo.findById(donationPayload.getUser()).orElse(null);
+		Recipient recipientId = recipientRepo.findById(donationPayload.getRecipient()).orElse(null);
 		
 		/** set the created value*/
-		Donation donation = new Donation(donationPayload.getAccepted_Date(),donationPayload.getGiven_Date(),pictureUrl,userId);
+		Donation donation = new Donation(donationPayload.getAccepted_Date(),donationPayload.getGiven_Date(),pictureUrl,userId,recipientId);
 		
 		donation = donationRepo.save(donation);
 		
@@ -96,7 +101,7 @@ public class DonationController {
 		return new ResponseEntity<Donation>(donation,HttpStatus.OK);
 	}
 	
-	/** Update New Donation*/
+	/** Edit Donation Data*/
 	@PutMapping("/updateDonation/{id}")
 	public ResponseEntity<Donation> update(
 			@PathVariable("id") String id,
