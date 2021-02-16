@@ -7,58 +7,161 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
+@Data
 @Entity
-@Table(name="recipient")
-@Setter @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Recipient {
+public class Recipient extends Persistance{
+	
 	@Id
-	@Column(length=36)
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name ="uuid", strategy = "uuid2")
+	@Column(name="id", unique = true)
 	private String id;
 	
-	@JoinColumn(name = "user_id")
-	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-	@JsonIgnore
-	private User user;
+	public enum RecipientStatus {
+		ACTIVE, NONACTIVE, PROGRESS, REJECT
+	}
+	
+	@Column(length = 100)
+	private String name;
+	
+	@Column
+	private Date birthdate;
+	
+	@Column(length = 255)
+	private String address;
+	
+	@Column(length = 255)
+	private String description;
+	
+	@Column(length = 50)
+	@Enumerated(EnumType.STRING)
+	private RecipientStatus recipientStatus;
 	
 	@JoinColumn(name = "city_id")
 	@ManyToOne(targetEntity = City.class, fetch = FetchType.LAZY)
-	@JsonIgnore
+	@JsonIgnoreProperties(value = {"id", "hibernateLazyInitializer"})
 	private City city;
 	
-	@Column(length=100,nullable=false)
-	private String name;
+	@JoinColumn(name = "user_id")
+	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+	@JsonIgnoreProperties(value = {"id", "hibernateLazyInitializer"})
+	private User user;
 	
-	@Column(nullable=false)
-	private Date birthDate;
-	
-	@Column(length=100,nullable=false)
-	private String address;
-	
-	@Column(length=255)
-	private String photoUrl;
-	
-	@Column(length = 50, nullable=false)
-	@Enumerated(EnumType.STRING)
-	private Status status;
-	
-	@Column(length=500,nullable=false)
-	private String description;
-	
-	public enum Status{
-		ACTIVE,NON_ACTIVE
+	private String imagesId;
+	private String imagesUrl;
+
+	public Recipient() {
+		super();
 	}
+
+	public Recipient(String name, Date birthdate, String address, String description, RecipientStatus recipientStatus,
+			City city, User user) {
+		super();
+		this.name = name;
+		this.birthdate = birthdate;
+		this.address = address;
+		this.description = description;
+		this.recipientStatus = recipientStatus;
+		this.city = city;
+		this.user = user;
+		this.setCreatedTime(new Date());
+	}
+	
+	public Recipient(String imagesId, String ImagesUrl) {
+		super();
+		this.imagesId = imagesId;
+		this.imagesUrl = ImagesUrl;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Date getBirthdate() {
+		return birthdate;
+	}
+
+	public void setBirthdate(Date birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public RecipientStatus getRecipientStatus() {
+		return recipientStatus;
+	}
+
+	public void setRecipientStatus(RecipientStatus recipientStatus) {
+		this.recipientStatus = recipientStatus;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getImagesId() {
+		return imagesId;
+	}
+
+	public void setImagesId(String imagesId) {
+		this.imagesId = imagesId;
+	}
+
+	public String getImagesUrl() {
+		return imagesUrl;
+	}
+
+	public void setImagesUrl(String imagesUrl) {
+		this.imagesUrl = imagesUrl;
+	}
+	
 }
