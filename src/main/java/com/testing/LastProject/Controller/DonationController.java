@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 
 import com.testing.LastProject.ErrorHandler.ResourceNotFoundException;
 import com.testing.LastProject.Repository.DonationRepo;
@@ -25,10 +27,14 @@ import com.testing.LastProject.Service.FileStorageService;
 import com.testing.LastProject.model.Donation;
 import com.testing.LastProject.model.Recipient;
 import com.testing.LastProject.model.User;
-import com.testing.LastProject.payload.DonationPayload;
+
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
 
 
 
@@ -38,52 +44,54 @@ public class DonationController {
 	@Autowired
 	private DonationRepo donationRepo;
 	@Autowired
-	private UserRepository userRepo;
-	@Autowired
 	private RecipientRepository recipientRepo;
+	@Autowired
+	private UserRepository userRepo;
 	
 	private FileStorageService fileStorageService;
+
 	
 	public DonationController(FileStorageService fileStorageService) {
 		this.fileStorageService = fileStorageService;
 	}
-	/** Create Donation */
+
+	@Transactional
 	@PostMapping("/addDonation")
 	public ResponseEntity<Donation> create(
-			DonationPayload donationPayload,
+			@RequestHeader(value="authorization") String token,
 			@RequestParam("accepted_Date") 	@DateTimeFormat(pattern = "yyyy-MM-dd") Date accepted_Date,
 			@RequestParam("given_Date")	@DateTimeFormat(pattern = "yyyy-MM-dd")Date given_Date,
-			@RequestParam("photo")MultipartFile photo){
+			@RequestParam("photo")MultipartFile photo,
+			@RequestParam("user_id") UUID user_id,
+			@RequestParam("recipient_id") String recipient_id
+			){
+		
+		/** Get recipient_id and user_id*/
+		Recipient recipient = recipientRepo.findById(recipient_id).get();
+	
+		User userId = userRepo.findById(user_id).orElse(null);
+		
+		System.out.println(recipient);
+		
 		
 		/** change file into URL*/
 		String fileName = fileStorageService.storeFile(photo);
 		String pictureUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-						.path("/donation/")
+						.path("/api/donation/")
 						.path(fileName)
 						.toUriString();
 		
-		/** get user Id data*/
-		User userId = userRepo.findById(donationPayload.getUser()).orElse(null);
-		Recipient recipientId = recipientRepo.findById(donationPayload.getRecipient()).orElse(null);
-		
 		/** set the created value*/
-		Donation donation = new Donation(donationPayload.getAccepted_Date(),donationPayload.getGiven_Date(),pictureUrl,userId,recipientId);
+		Donation donation = new Donation();
+		donation.setAccepted_Date(accepted_Date);
+		donation.setGiven_Date(given_Date);
+		donation.setPhoto(pictureUrl);
+		donation.setRecipient(recipient);
+		donation.setUser(userId);
 		
 		donation = donationRepo.save(donation);
 		
 		return new ResponseEntity<Donation>(donation,HttpStatus.OK);
-	}
-	
-	/** Get Donation (download) picture file */
-	@GetMapping("/{fileName}")
-	  ResponseEntity<Resource>downloadDonationFile(@PathVariable String fileName){
-		Resource resource = fileStorageService.downloadFile(fileName);
-		MediaType contentType = MediaType.IMAGE_JPEG;
-		
-		return ResponseEntity.ok()
-				.contentType(contentType)
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment:fileName="+resource.getFilename())
-				.body(resource);
 	}
 	
 	/** Get Donation Data */
@@ -131,5 +139,18 @@ public class DonationController {
 		
 		return new ResponseEntity<Donation>(donation,HttpStatus.OK);
 	}
+	
+	/** Get Donation (download) picture file */
+	@GetMapping("/{fileName}")
+	  ResponseEntity<Resource>downloadDonationFile(@PathVariable String fileName){
+		Resource resource = fileStorageService.downloadFile(fileName);
+		MediaType contentType = MediaType.IMAGE_JPEG;
+		
+		return ResponseEntity.ok()
+				.contentType(contentType)
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment:fileName="+resource.getFilename())
+				.body(resource);
+	}
+	
 
 }

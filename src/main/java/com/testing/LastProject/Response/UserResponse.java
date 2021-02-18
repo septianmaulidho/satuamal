@@ -3,7 +3,6 @@ package com.testing.LastProject.Response;
 import java.util.UUID;
 
 import com.testing.LastProject.model.City;
-import com.testing.LastProject.model.User;
 import com.testing.LastProject.model.User.Role;
 import com.testing.LastProject.model.User.Status;
 

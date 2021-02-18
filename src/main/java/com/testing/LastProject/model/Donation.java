@@ -20,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 @Entity
 @Table(name = "Donation")
 public class Donation {
@@ -50,14 +51,13 @@ public class Donation {
 	private User user;
 	
 	@JoinColumn(name = "recipient_id")
-	@ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = Recipient.class, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Recipient recipient;
 	
 	public Donation() {
 		super();
 	}
-	
 
 	public Donation(Date accepted_Date, Date given_Date, String photo, User user, Recipient recipient) {
 		super();
@@ -67,7 +67,6 @@ public class Donation {
 		this.user = user;
 		this.recipient = recipient;
 	}
-
 
 	public String getId() {
 		return id;
@@ -93,8 +92,6 @@ public class Donation {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-
-
 	public User getUser() {
 		return user;
 	}
@@ -102,11 +99,9 @@ public class Donation {
 		this.user = user;
 	}
 
-
 	public Recipient getRecipient() {
 		return recipient;
 	}
-
 	public void setRecipient(Recipient recipient) {
 		this.recipient = recipient;
 	}

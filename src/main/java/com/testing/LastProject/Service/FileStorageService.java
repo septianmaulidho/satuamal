@@ -21,7 +21,7 @@ public class FileStorageService {
 	private Path fileStoragePath;
 	private String fileStorageLocation;
 	
-	public FileStorageService (@Value("${file.storage.location:temp}") String fileStorageLocation) {
+	public FileStorageService (@Value("${file.storage.location:/home/mohfitrahgiffari/Documents/Java Class/satuamalfileupload}") String fileStorageLocation) {
 		 this.fileStorageLocation = fileStorageLocation;
 	        fileStoragePath = Paths.get(fileStorageLocation).toAbsolutePath().normalize();
 	}
@@ -29,12 +29,6 @@ public class FileStorageService {
 	        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
 	        Path filePath = Paths.get(fileStoragePath +"//" + fileName);
-	        
-	        try {
-	            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-	        } catch (IOException e) {
-	            throw new RuntimeException("Issue in storing the file", e);
-	        }
 
 	        try {
 	            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
