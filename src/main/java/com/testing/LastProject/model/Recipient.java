@@ -1,6 +1,7 @@
 package com.testing.LastProject.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

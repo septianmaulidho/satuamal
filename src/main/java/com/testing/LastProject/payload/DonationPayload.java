@@ -21,11 +21,12 @@ public class DonationPayload {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date given_Date;
 	
-	private String photo;
+	private String Photo;
 	
-	private UUID user;
 	
 	private String recipient;
+	
+	private UUID user;
 
 
 	public Date getAccepted_Date() {
@@ -35,18 +36,19 @@ public class DonationPayload {
 	public Date getGiven_Date() {
 		return given_Date;
 	}
-
-	public String getPhoto() {
-		return photo;
-	}
 	
-	public UUID getUser() {
-		return user;
+	public String getPhoto() {
+		return Photo;
 	}
 
 	public String getRecipient() {
 		return recipient;
 	}
+
+	public UUID getUser() {
+		return user;
+	}
+	
 	
 	
 }
